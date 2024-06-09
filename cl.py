@@ -1,5 +1,6 @@
 import pygame, math, os
 
+bO = True
 G = 6.67 * 10**-11
 gameObjects = []
 
@@ -11,15 +12,18 @@ def dist(main, other):
   dy = main.pos.y - other.pos.x
   return math.sqrt(dx**2 + dy**2)
 
+scale = 3.8*10**8/250
+
 def getNet(obj):
   net = pygame.math.Vector2(0,0)
   for x in gameObjects:
     if obj != x:
-      n = G * x.mass / ((dist(obj, x)))**2
+      d = dist(obj, x)*scale
+      n = G * x.mass / d**2
       net += n * vec(obj, x)
 
   return net
-
+ # (3.8 * 10^8)m/250px
 class Thing():
   def __init__(self, mass, pos, radius, v):
     gameObjects.append(self)
@@ -30,13 +34,14 @@ class Thing():
     self.vi = v
     self.v = pygame.math.Vector2(0,0) + self.vi
     self.a = pygame.math.Vector2(0,0)
-
   def showVector(self):
-    pygame.draw.line(pygame.display.get_surface(), (0,0,0), self.pos, self.pos + self.v, width=3)      
+    if bO == True:
+      pygame.draw.line(pygame.display.get_surface(), (0,0,0), self.pos, self.pos + self.v, width=3)      
 
   def showField(self):
     for i in range(1, 18):
-      pygame.draw.circle(pygame.display.get_surface(), (128, 128, 128, 20), self.pos, self.radius + self.radius*1.5**i, 1)
+      if bO == True:
+        pygame.draw.circle(pygame.display.get_surface(), (128, 128, 128, 20), self.pos, self.radius + self.radius*1.5**i, 1)
 
   def move(self):
     pygame.draw.circle(pygame.display.get_surface(), (255,0,0), (self.pos.x, self.pos.y), self.radius)
