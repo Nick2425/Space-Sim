@@ -15,7 +15,7 @@ def getNet(obj):
   net = pygame.math.Vector2(0,0)
   for x in gameObjects:
     if obj != x:
-      n = G * x.mass / ((dist(obj, x))*1000)**2
+      n = G * x.mass / ((dist(obj, x)))**2
       net += n * vec(obj, x)
 
   return net
@@ -36,16 +36,16 @@ class Thing():
 
   def showField(self):
     for i in range(1, 18):
-      pygame.draw.circle(pygame.display.get_surface(), (128, 128, 128, 50), self.pos, self.radius + self.radius*1.5**i, 1)
+      pygame.draw.circle(pygame.display.get_surface(), (128, 128, 128, 20), self.pos, self.radius + self.radius*1.5**i, 1)
 
   def move(self):
+    pygame.draw.circle(pygame.display.get_surface(), (255,0,0), (self.pos.x, self.pos.y), self.radius)
     self.showField()
     self.showVector()
     self.collide()
     self.a = getNet(self)
     self.v += self.a
     self.pos += self.v*0.05
-    pygame.draw.circle(pygame.display.get_surface(), (255,0,0), (self.pos.x, self.pos.y), self.radius)
 
 
 
@@ -67,5 +67,6 @@ def vec(obj1, obj2):
   dx = obj2.pos.x - obj1.pos.x
   dy = obj2.pos.y - obj1.pos.y
   Vec = pygame.math.Vector2(dx, dy)
-  Vec.normalize()
+  if Vec.length() > 1:
+    Vec.normalize()
   return Vec
